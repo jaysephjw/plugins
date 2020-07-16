@@ -3,10 +3,12 @@
 
 package io.flutter.plugins.videoplayer;
 
+import java.util.HashMap;
+import java.util.List;
+
 import io.flutter.plugin.common.BasicMessageChannel;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.StandardMessageCodec;
-import java.util.HashMap;
 
 /** Generated class from Pigeon. */
 public class Messages {
@@ -81,12 +83,23 @@ public class Messages {
       this.formatHint = setterArg;
     }
 
+    private List<String> cookies;
+
+    public List<String> getCookies() {
+      return cookies;
+    }
+
+    public void setCookies(List<String> setterArg) {
+      this.cookies = setterArg;
+    }
+
     HashMap toMap() {
       HashMap<String, Object> toMapResult = new HashMap<String, Object>();
       toMapResult.put("asset", asset);
       toMapResult.put("uri", uri);
       toMapResult.put("packageName", packageName);
       toMapResult.put("formatHint", formatHint);
+      toMapResult.put("cookies", cookies);
       return toMapResult;
     }
 
@@ -96,6 +109,7 @@ public class Messages {
       fromMapResult.uri = (String) map.get("uri");
       fromMapResult.packageName = (String) map.get("packageName");
       fromMapResult.formatHint = (String) map.get("formatHint");
+      fromMapResult.cookies = (List<String>) map.get("cookies");
       return fromMapResult;
     }
   }

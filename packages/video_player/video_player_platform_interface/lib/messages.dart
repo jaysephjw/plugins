@@ -26,6 +26,8 @@ class CreateMessage {
   String uri;
   String packageName;
   String formatHint;
+  List<String> cookies;
+
   // ignore: unused_element
   Map<dynamic, dynamic> _toMap() {
     final Map<dynamic, dynamic> pigeonMap = <dynamic, dynamic>{};
@@ -33,6 +35,7 @@ class CreateMessage {
     pigeonMap['uri'] = uri;
     pigeonMap['packageName'] = packageName;
     pigeonMap['formatHint'] = formatHint;
+    pigeonMap['cookies'] = cookies;
     return pigeonMap;
   }
 
@@ -43,6 +46,7 @@ class CreateMessage {
     result.uri = pigeonMap['uri'];
     result.packageName = pigeonMap['packageName'];
     result.formatHint = pigeonMap['formatHint'];
+    result.cookies = pigeonMap['cookies'];
     return result;
   }
 }

@@ -6,6 +6,7 @@ import static com.google.android.exoplayer2.Player.REPEAT_MODE_OFF;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.Surface;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -32,6 +33,9 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.view.TextureRegistry;
+
+import java.net.HttpCookie;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,7 +65,8 @@ final class VideoPlayer {
       EventChannel eventChannel,
       TextureRegistry.SurfaceTextureEntry textureEntry,
       String dataSource,
-      String formatHint) {
+      String formatHint,
+      List<String> cookies) {
     this.eventChannel = eventChannel;
     this.textureEntry = textureEntry;
 
@@ -72,13 +77,27 @@ final class VideoPlayer {
 
     DataSource.Factory dataSourceFactory;
     if (isHTTP(uri)) {
-      dataSourceFactory =
+      DefaultHttpDataSourceFactory defaultHttpDataSourceFactory =
           new DefaultHttpDataSourceFactory(
               "ExoPlayer",
               null,
               DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
               DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
               true);
+      if(cookies != null) {
+        List<String> nameValuePairs = new ArrayList<>();
+        for (String cookie : cookies) {
+          final List<HttpCookie> parsedCookies = HttpCookie.parse(cookie);
+          for (HttpCookie parsedCookie : parsedCookies) {
+            nameValuePairs.add(parsedCookie.getName() + "=" + parsedCookie.getValue());
+          }
+        }
+        final HashMap<String, String> headers = new HashMap<String, String>(){{
+          put("Cookie", TextUtils.join("; ", nameValuePairs));
+        }};
+        defaultHttpDataSourceFactory.getDefaultRequestProperties().set(headers);
+      }
+      dataSourceFactory = defaultHttpDataSourceFactory;
     } else {
       dataSourceFactory = new DefaultDataSourceFactory(context, "ExoPlayer");
     }
